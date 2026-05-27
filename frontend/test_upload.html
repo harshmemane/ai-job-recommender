@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h3>File Upload Test</h3>
+<input type="file" id="myfile" accept=".pdf" /><br/><br/>
+<button type="button" onclick="uploadTest()">Test Upload</button>
+<p id="result" style="color:blue;">Waiting...</p>
+<script>
+function uploadTest() {
+  var file = document.getElementById('myfile').files[0];
+  if (!file) {
+    alert('Pick a file first');
+    return;
+  }
+  document.getElementById('result').textContent = 'Uploading ' + file.name + '...';
+
+  var fd = new FormData();
+  fd.append('resume', file);
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'http://127.0.0.1:5000/full-analysis', true);
+
+  xhr.onload = function() {
+    document.getElementById('result').textContent = 'STATUS: ' + xhr.status + ' | ' + xhr.responseText.substring(0, 200);
+  };
+
+  xhr.onerror = function() {
+    document.getElementById('result').textContent = 'ERROR: Cannot reach server';
+  };
+
+  xhr.ontimeout = function() {
+    document.getElementById('result').textContent = 'TIMEOUT: Server too slow';
+  };
+
+  xhr.timeout = 30000;
+  xhr.send(fd);
+}
+</script>
+</body>
+</html>

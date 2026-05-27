@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>AI Job Recommender</title>
+<style>
+body { font-family: Segoe UI, sans-serif; background: #f0f4f8; padding: 20px; }
+h1 { color: #2b6cb0; }
+.box { background: white; padding: 24px; border-radius: 12px; margin-bottom: 20px; }
+.badge { background: #ebf8ff; color: #2b6cb0; padding: 4px 10px; border-radius: 20px; font-size: 13px; margin: 4px; display: inline-block; }
+.miss  { background: #fff5f5; color: #c53030; padding: 4px 10px; border-radius: 20px; font-size: 13px; margin: 4px; display: inline-block; }
+.hit   { background: #f0fff4; color: #276749; padding: 4px 10px; border-radius: 20px; font-size: 13px; margin: 4px; display: inline-block; }
+.job   { border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+.btn   { background: #2b6cb0; color: white; border: none; padding: 12px 28px; border-radius: 8px; font-size: 15px; cursor: pointer; }
+.btn:hover { background: #2c5282; }
+a { color: #2b6cb0; }
+#output { display: none; }
+</style>
+</head>
+<body>
+
+<h1>AI Job Recommender</h1>
+
+<div class="box">
+  <p>Select your resume PDF and click Analyze</p>
+  <input type="file" id="myfile" accept=".pdf" /><br/><br/>
+  <button class="btn" type="button" id="mybtn">Analyze My Resume</button>
+  <p id="status" style="color:#2b6cb0;margin-top:10px;"></p>
+</div>
+
+<div id="output">
+
+  <div class="box">
+    <h2>Your Profile</h2>
+    <p><b>Email:</b> <span id="r_email"></span></p>
+    <p><b>Phone:</b> <span id="r_phone"></span></p>
+    <p><b>Skills:</b></p>
+    <div id="r_skills"></div>
+  </div>
+
+  <div class="box">
+    <h2>Top Job Matches</h2>
+    <div id="r_jobs"></div>
+  </div>
+
+  <div class="box">
+    <h2>Skill Gap Analysis</h2>
+    <div id="r_gaps"></div>
+  </div>
+
+  <div class="box">
+    <h2>Learning Roadmap</h2>
+    <div id="r_roadmap"></div>
+  </div>
+
+</div>
+
+<script>
+document.getElementById('mybtn').addEventListener('click', function() {
+
+  var file = document.getElementById('myfile').files[0];
+  if (!file) {
+    alert('Please choose a PDF file first!');
+    return;
+  }
+
+  document.getElementById('status').textContent = 'Analyzing... please wait';
+  document.getElementById('output').style.display = 'none';
+
+  var fd = new FormData();
+  fd.append('resume', file);
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'http://127.0.0.1:5000/full-analysis', true);
+
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      var data = JSON.parse(xhr.responseText);
+      showResults(data);
+      document.getElementById('status').textContent = 'Done!';
+      document.getElementById('output').style.display = 'block';
+    } else {
+      document.getElementById('status').textContent = 'Server error: ' + xhr.status;
+    }
+  };
+
+  xhr.onerror = function() {
+    document.getElementById('status').textContent = 'Cannot reach backend. Is Flask running on port 5000?';
+  };
+
+  xhr.send(fd);
+});
+
+function showResults(data) {
+  document.getElementById('r_email').textContent = data.candidate.email;
+  document.getElementById('r_phone').textContent = data.candidate.phone;
+
+  var skillsHtml = '';
+  data.candidate.skills.forEach(function(s) {
+    skillsHtml += '<span class="badge">' + s + '</span>';
+  });
+  document.getElementById('r_skills').innerHTML = skillsHtml;
+
+  var jobsHtml = '';
+  data.recommended_jobs.forEach(function(j) {
+    jobsHtml += '<div class="job">' +
+      '<b>' + j.title + '</b> at ' + j.company +
+      ' <span class="hit">' + j.match_score + '% match</span>' +
+      '</div>';
+  });
+  document.getElementById('r_jobs').innerHTML = jobsHtml;
+
+  var gapsHtml = '';
+  data.skill_gaps.forEach(function(g) {
+    gapsHtml += '<div class="job"><b>' + g.job_title + '</b> at ' + g.company + '<br/>';
+    g.matched_skills.forEach(function(s) {
+      gapsHtml += '<span class="hit">✓ ' + s + '</span>';
+    });
+    g.missing_skills.forEach(function(s) {
+      gapsHtml += '<span class="miss">✗ ' + s + '</span>';
+    });
+    gapsHtml += '</div>';
+  });
+  document.getElementById('r_gaps').innerHTML = gapsHtml;
+
+  var roadHtml = '';
+  data.learning_roadmap.forEach(function(item) {
+    roadHtml += '<p><b>' + item.skill.toUpperCase() + '</b></p>';
+    item.courses.forEach(function(c) {
+      roadHtml += '<a href="' + c.url + '" target="_blank">[' + c.platform + '] ' + c.title + '</a><br/>';
+    });
+    roadHtml += '<br/>';
+  });
+  document.getElementById('r_roadmap').innerHTML = roadHtml;
+}
+</script>
+</body>
+</html>

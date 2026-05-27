@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "title": "Data Scientist",
+    "company": "TCS",
+    "description": "Looking for python machine learning deep learning tensorflow scikit-learn sql data analysis nlp experience",
+    "required_skills": ["python", "machine learning", "deep learning", "tensorflow", "sql", "nlp"]
+  },
+  {
+    "id": 2,
+    "title": "Backend Developer",
+    "company": "Infosys",
+    "description": "Need java spring boot rest api mysql git oops backend development experience",
+    "required_skills": ["java", "spring boot", "mysql", "git", "rest api"]
+  },
+  {
+    "id": 3,
+    "title": "Data Analyst",
+    "company": "Wipro",
+    "description": "Seeking python sql mysql excel power bi data analysis reporting dashboard skills",
+    "required_skills": ["python", "sql", "mysql", "excel", "power bi"]
+  },
+  {
+    "id": 4,
+    "title": "ML Engineer",
+    "company": "Google",
+    "description": "Python tensorflow deep learning nlp machine learning scikit-learn flask docker git required",
+    "required_skills": ["python", "tensorflow", "deep learning", "nlp", "flask", "git"]
+  },
+  {
+    "id": 5,
+    "title": "Full Stack Developer",
+    "company": "Capgemini",
+    "description": "React javascript html css flask python rest api mysql git full stack development",
+    "required_skills": ["react", "javascript", "html", "css", "flask", "python", "mysql"]
+  },
+  {
+    "id": 6,
+    "title": "GenAI Engineer",
+    "company": "Microsoft",
+    "description": "Python generative ai nlp deep learning tensorflow flask git rest api llm experience needed",
+    "required_skills": ["python", "nlp", "deep learning", "tensorflow", "flask", "git"]
+  }
+]

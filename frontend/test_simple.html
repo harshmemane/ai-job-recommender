@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<body>
+<button type="button" onclick="doTest()">Test Backend</button>
+<p id="result">Not tested yet</p>
+<script>
+function doTest() {
+  document.getElementById('result').textContent = 'Calling backend...';
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'http://127.0.0.1:5000/test', true);
+  xhr.onload = function() {
+    document.getElementById('result').textContent = 'SUCCESS: ' + xhr.responseText;
+  };
+  xhr.onerror = function() {
+    document.getElementById('result').textContent = 'FAILED - cannot reach backend';
+  };
+  xhr.send();
+}
+</script>
+</body>
+</html>
