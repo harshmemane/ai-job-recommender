@@ -71,7 +71,7 @@ document.getElementById('mybtn').addEventListener('click', function() {
   fd.append('resume', file);
 
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', 'http://127.0.0.1:5000/full-analysis', true);
+  xhr.open('POST', 'https://ai-job-recommender-1jqw.onrender.com/full-analysis', true);
 
   xhr.onload = function() {
     if (xhr.status === 200) {
